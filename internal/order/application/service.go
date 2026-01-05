@@ -27,7 +27,7 @@ func (s *Service) CreateOrder(ctx context.Context, o domain.Order, headers map[s
 	if !ok {
 		return ErrStockUnavailable
 	}
-	
+
 	event := domain.OrderCreated{
 		OrderID:    o.ID,
 		Customer:   o.Customer,
