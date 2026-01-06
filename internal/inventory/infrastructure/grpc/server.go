@@ -15,7 +15,7 @@ type Server struct {
 func NewServer() *Server { return &Server{} }
 
 func (s *Server) CheckStock(ctx context.Context, req *pb.CheckStockRequest) (*pb.CheckStockResponse, error) {
-	// Mock: always available
+	// Mocking: always available
 	return &pb.CheckStockResponse{Available: true}, nil
 }
 
