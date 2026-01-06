@@ -32,6 +32,7 @@ func main() {
 	jaeger := env("JAEGER_URL", "http://localhost:14268/api/traces")
 	httpAddr := env("HTTP_ADDR", ":8080")
 	outboxTopic := env("OUTBOX_TOPIC", "order.events")
+	inventorySvcAddr := env("INVENTORY_GRPC_ADDR", "localhost:50051")
 
 	tp, err := tracing.Init(ctx, "order-service", jaeger, log)
 	if err != nil {
@@ -58,8 +59,13 @@ func main() {
 	dispatch := outbox.NewDispatcher(log, writer, outboxTopic)
 	relay := outbox.NewRelay(log, store, dispatch, "order-service-relay")
 
-	// Inventory client (mock for now)
-	inv := ordergrpc.NewInventoryClient()
+	// Inventory client
+	inv, err := ordergrpc.NewInventoryClient(log, inventorySvcAddr)
+	if err != nil {
+		log.Error("inventory client init failed", "err", err)
+		os.Exit(1)
+	}
+
 	svc := application.NewService(repo, inv)
 	handler := orderhttp.NewHandler(log, svc)
 
