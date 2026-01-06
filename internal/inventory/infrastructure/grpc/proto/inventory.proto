@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package inventory;
+
+option go_package = "github.com/dmehra2102/Order-Management-System/internal/inventory/infrastructure/grpc/proto;proto";
+
+
+message Item {
+    string sku = 1;
+    int32 quantity = 2;
+}
+
+message CheckStockRequest {
+    repeated Item items = 1;
+}
+
+message CheckStockResponse {
+    bool available = 1;
+}
+
+service InventoryService {
+    // Check the inventory availability in the store
+    rpc CheckStock(CheckStockRequest) returns (CheckStockResponse);
+}
+
