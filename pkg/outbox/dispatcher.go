@@ -28,6 +28,7 @@ func (d *Dispatcher) Disptach(ctx context.Context, event Event) error {
 	for k, v := range event.Headers {
 		headers = append(headers, kafka.Header{Key: k, Value: []byte(v)})
 	}
+	headers = append(headers, kafka.Header{Key: "event_type", Value: []byte(event.Type)})
 	if event.Traceparent != "" {
 		headers = append(headers, kafka.Header{Key: "traceparent", Value: []byte(event.Traceparent)})
 	}
